@@ -312,13 +312,11 @@ func convertResourceOptions(opts AnalyzerResourceOptions) *pulumirpc.AnalyzerRes
 		Provider:                   opts.Provider,
 		AdditionalSecretOutputs:    secs,
 		Aliases:                    convertURNs(opts.Aliases),
-	}
-	if opts.CustomTimeouts.IsNotEmpty() {
-		result.CustomTimeouts = &pulumirpc.AnalyzerResourceOptions_CustomTimeouts{
+		CustomTimeouts: &pulumirpc.AnalyzerResourceOptions_CustomTimeouts{
 			Create: opts.CustomTimeouts.Create,
 			Update: opts.CustomTimeouts.Update,
 			Delete: opts.CustomTimeouts.Delete,
-		}
+		},
 	}
 	return result
 }
