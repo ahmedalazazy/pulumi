@@ -142,12 +142,18 @@ func (a *analyzer) Analyze(r AnalyzerResource) ([]AnalyzeDiagnostic, error) {
 		return nil, err
 	}
 
+	provider, err := convertResourceProvider(r.Provider)
+	if err != nil {
+		return nil, err
+	}
+
 	resp, err := a.client.Analyze(a.ctx.Request(), &pulumirpc.AnalyzeRequest{
 		Urn:        string(urn),
 		Type:       string(t),
 		Name:       string(name),
 		Properties: mprops,
 		Options:    convertResourceOptions(r.Options),
+		Provider:   provider,
 	})
 	if err != nil {
 		rpcError := rpcerror.Convert(err)
@@ -176,12 +182,18 @@ func (a *analyzer) AnalyzeStack(resources []AnalyzerResource) ([]AnalyzeDiagnost
 			return nil, errors.Wrap(err, "marshalling properties")
 		}
 
+		provider, err := convertResourceProvider(resource.Provider)
+		if err != nil {
+			return nil, err
+		}
+
 		protoResources[idx] = &pulumirpc.AnalyzerResource{
 			Urn:        string(resource.URN),
 			Type:       string(resource.Type),
 			Name:       string(resource.Name),
 			Properties: props,
 			Options:    convertResourceOptions(resource.Options),
+			Provider:   provider,
 		}
 	}
 
@@ -285,14 +297,21 @@ func convertResourceOptions(opts AnalyzerResourceOptions) *pulumirpc.AnalyzerRes
 		secs[idx] = string(opts.AdditionalSecretOutputs[idx])
 	}
 
+	var deleteBeforeReplace bool
+	if opts.DeleteBeforeReplace != nil {
+		deleteBeforeReplace = *opts.DeleteBeforeReplace
+	}
+
 	result := &pulumirpc.AnalyzerResourceOptions{
-		Parent:                  string(opts.Parent),
-		Protect:                 opts.Protect,
-		IgnoreChanges:           opts.IgnoreChanges,
-		Dependencies:            convertURNs(opts.Dependencies),
-		Provider:                opts.Provider,
-		AdditionalSecretOutputs: secs,
-		Aliases:                 convertURNs(opts.Aliases),
+		Parent:                     string(opts.Parent),
+		Protect:                    opts.Protect,
+		IgnoreChanges:              opts.IgnoreChanges,
+		DeleteBeforeReplace:        deleteBeforeReplace,
+		DeleteBeforeReplaceDefined: opts.DeleteBeforeReplace != nil,
+		Dependencies:               convertURNs(opts.Dependencies),
+		Provider:                   opts.Provider,
+		AdditionalSecretOutputs:    secs,
+		Aliases:                    convertURNs(opts.Aliases),
 	}
 	if opts.CustomTimeouts.IsNotEmpty() {
 		result.CustomTimeouts = &pulumirpc.AnalyzerResourceOptions_CustomTimeouts{
@@ -302,6 +321,24 @@ func convertResourceOptions(opts AnalyzerResourceOptions) *pulumirpc.AnalyzerRes
 		}
 	}
 	return result
+}
+
+func convertResourceProvider(provider *AnalyzerResourceProvider) (*pulumirpc.AnalyzerResourceProvider, error) {
+	if provider == nil {
+		return nil, nil
+	}
+
+	props, err := MarshalProperties(provider.Properties, MarshalOptions{KeepUnknowns: true, KeepSecrets: true})
+	if err != nil {
+		return nil, errors.Wrap(err, "marshalling properties")
+	}
+
+	return &pulumirpc.AnalyzerResourceProvider{
+		Urn:        string(provider.URN),
+		Type:       string(provider.Type),
+		Name:       string(provider.Name),
+		Properties: props,
+	}, nil
 }
 
 func convertURNs(urns []resource.URN) []string {

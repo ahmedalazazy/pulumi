@@ -44,6 +44,7 @@ message AnalyzeRequest {
     string urn = 3;                        // the URN of the resource.
     string name = 4;                       // the name for the resource's URN.
     AnalyzerResourceOptions options = 5;   // the resource options.
+    AnalyzerResourceProvider provider = 6; // the resource's provider.
 }
 
 // AnalyzerResource defines the view of a Pulumi-managed resource as sent to Analyzers. The properties
@@ -55,6 +56,7 @@ message AnalyzerResource {
     string urn = 3;                        // the URN of the resource.
     string name = 4;                       // the name for the resource's URN.
     AnalyzerResourceOptions options = 5;   // the resource options.
+    AnalyzerResourceProvider provider = 6; // the resource's provider.
 }
 
 // AnalyzerResourceOptions defines the options associated with a resource.
@@ -69,11 +71,21 @@ message AnalyzerResourceOptions {
     string parent = 1;                           // an optional parent URN that this child resource belongs to.
     bool protect = 2;                            // true if the resource should be marked protected.
     repeated string ignoreChanges = 3;           // a list of property names to ignore during changes.
-    repeated string dependencies = 4;            // a list of URNs that this resource depends on.
-    string provider = 5;                         // the provider to manage this resource's CRUD operations.
-    repeated string additionalSecretOutputs = 6; // a list of output properties that should also be treated as secret, in addition to ones we detect.
-    repeated string aliases = 7;                 // a list of additional URNs that shoud be considered the same.
-    CustomTimeouts customTimeouts = 8;           // a config block that will be used to configure timeouts for CRUD operations.
+    bool deleteBeforeReplace = 4;                // true if this resource should be deleted before replacement.
+    bool deleteBeforeReplaceDefined = 5;         // true if the deleteBeforeReplace property should be treated as defined even if it is false.
+    repeated string dependencies = 6;            // a list of URNs that this resource depends on.
+    string provider = 7;                         // the provider to manage this resource's CRUD operations.
+    repeated string additionalSecretOutputs = 8; // a list of output properties that should also be treated as secret, in addition to ones we detect.
+    repeated string aliases = 9;                 // a list of additional URNs that shoud be considered the same.
+    CustomTimeouts customTimeouts = 10;          // a config block that will be used to configure timeouts for CRUD operations.
+}
+
+// AnalyzerResourceProvider provides information about a resource's provider.
+message AnalyzerResourceProvider {
+    string type = 1;                       // the type token of the resource.
+    google.protobuf.Struct properties = 2; // the full properties to use for validation.
+    string urn = 3;                        // the URN of the resource.
+    string name = 4;                       // the name for the resource's URN.
 }
 
 message AnalyzeStackRequest {

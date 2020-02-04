@@ -330,8 +330,8 @@ func (sg *stepGenerator) generateSteps(event RegisterResourceEvent) ([]Step, res
 		new.Inputs = inputs
 	}
 
-	// fmt.Printf("JVP (r):<%v>\n          goal: %#v\n           new: %#v\n     providers: %#v\nresourceStates: %#v\n</%v>\n\n\n\n",
-	// 	new.URN, goal, new, debugResourceStates(sg.providers), debugResourceStates(sg.resourceStates), new.URN)
+	fmt.Printf("JVP (r):<%v>\n          goal: %#v\n           new: %#v\n      provider: %#v\n     providers: %#v\nresourceStates: %#v\n</%v>\n\n\n\n",
+		new.URN, goal, new, prov, debugResourceStates(sg.providers), debugResourceStates(sg.resourceStates), new.URN)
 
 	// Send the resource off to any Analyzers before being operated on.
 	analyzers := sg.plan.ctx.Host.ListAnalyzers()
@@ -345,6 +345,7 @@ func (sg *stepGenerator) generateSteps(event RegisterResourceEvent) ([]Step, res
 				Parent:                  new.Parent,
 				Protect:                 new.Protect,
 				IgnoreChanges:           goal.IgnoreChanges,
+				DeleteBeforeReplace:     goal.DeleteBeforeReplace,
 				Dependencies:            new.Dependencies,
 				Provider:                new.Provider,
 				AdditionalSecretOutputs: new.AdditionalSecretOutputs,
@@ -352,6 +353,19 @@ func (sg *stepGenerator) generateSteps(event RegisterResourceEvent) ([]Step, res
 				CustomTimeouts:          new.CustomTimeouts,
 			},
 		}
+		providerResource, res := sg.getResourceProviderState(new.URN, new.Provider)
+		if res != nil {
+			return nil, res
+		}
+		if providerResource != nil {
+			r.Provider = &plugin.AnalyzerResourceProvider{
+				URN:        providerResource.URN,
+				Type:       providerResource.Type,
+				Name:       providerResource.URN.Name(),
+				Properties: providerResource.Inputs,
+			}
+		}
+
 		diagnostics, err := analyzer.Analyze(r)
 		if err != nil {
 			return nil, result.FromError(err)
@@ -1161,6 +1175,19 @@ func (sg *stepGenerator) loadResourceProvider(
 	return p, nil
 }
 
+func (sg *stepGenerator) getResourceProviderState(urn resource.URN, provider string) (*resource.State, result.Result) {
+	if provider == "" {
+		return nil, nil
+	}
+
+	ref, err := providers.ParseReference(provider)
+	if err != nil {
+		sg.plan.Diag().Errorf(diag.GetBadProviderError(urn), provider, urn, err)
+		return nil, result.Bail()
+	}
+	return sg.providers[ref.URN()], nil
+}
+
 type dependentReplace struct {
 	res  *resource.State
 	keys []resource.PropertyKey
@@ -1275,7 +1302,8 @@ func (sg *stepGenerator) AnalyzeResources() result.Result {
 	resources := make([]plugin.AnalyzerResource, 0, len(resourcesSeen))
 	for urn, v := range resourcesSeen {
 		goal := sg.resourceGoals[urn]
-		resources = append(resources, plugin.AnalyzerResource{
+
+		resource := plugin.AnalyzerResource{
 			URN:  v.URN,
 			Type: v.Type,
 			Name: v.URN.Name(),
@@ -1286,13 +1314,28 @@ func (sg *stepGenerator) AnalyzeResources() result.Result {
 				Parent:                  v.Parent,
 				Protect:                 v.Protect,
 				IgnoreChanges:           goal.IgnoreChanges,
+				DeleteBeforeReplace:     goal.DeleteBeforeReplace,
 				Dependencies:            v.Dependencies,
 				Provider:                v.Provider,
 				AdditionalSecretOutputs: v.AdditionalSecretOutputs,
 				Aliases:                 v.Aliases,
 				CustomTimeouts:          v.CustomTimeouts,
 			},
-		})
+		}
+		providerResource, res := sg.getResourceProviderState(v.URN, v.Provider)
+		if res != nil {
+			return res
+		}
+		if providerResource != nil {
+			resource.Provider = &plugin.AnalyzerResourceProvider{
+				URN:        providerResource.URN,
+				Type:       providerResource.Type,
+				Name:       providerResource.URN.Name(),
+				Properties: providerResource.Inputs,
+			}
+		}
+
+		resources = append(resources, resource)
 	}
 
 	analyzers := sg.plan.ctx.Host.ListAnalyzers()
