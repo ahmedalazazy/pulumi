@@ -19,10 +19,11 @@ goog.exportSymbol('proto.pulumirpc.AnalyzeRequest', null, global);
 goog.exportSymbol('proto.pulumirpc.AnalyzeResponse', null, global);
 goog.exportSymbol('proto.pulumirpc.AnalyzeStackRequest', null, global);
 goog.exportSymbol('proto.pulumirpc.AnalyzerInfo', null, global);
+goog.exportSymbol('proto.pulumirpc.AnalyzerPropertyDependencies', null, global);
+goog.exportSymbol('proto.pulumirpc.AnalyzerProviderResource', null, global);
 goog.exportSymbol('proto.pulumirpc.AnalyzerResource', null, global);
 goog.exportSymbol('proto.pulumirpc.AnalyzerResourceOptions', null, global);
 goog.exportSymbol('proto.pulumirpc.AnalyzerResourceOptions.CustomTimeouts', null, global);
-goog.exportSymbol('proto.pulumirpc.AnalyzerResourceProvider', null, global);
 goog.exportSymbol('proto.pulumirpc.EnforcementLevel', null, global);
 goog.exportSymbol('proto.pulumirpc.PolicyInfo', null, global);
 
@@ -77,7 +78,7 @@ proto.pulumirpc.AnalyzeRequest.toObject = function(includeInstance, msg) {
     urn: jspb.Message.getFieldWithDefault(msg, 3, ""),
     name: jspb.Message.getFieldWithDefault(msg, 4, ""),
     options: (f = msg.getOptions()) && proto.pulumirpc.AnalyzerResourceOptions.toObject(includeInstance, f),
-    provider: (f = msg.getProvider()) && proto.pulumirpc.AnalyzerResourceProvider.toObject(includeInstance, f)
+    provider: (f = msg.getProvider()) && proto.pulumirpc.AnalyzerProviderResource.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -137,8 +138,8 @@ proto.pulumirpc.AnalyzeRequest.deserializeBinaryFromReader = function(msg, reade
       msg.setOptions(value);
       break;
     case 6:
-      var value = new proto.pulumirpc.AnalyzerResourceProvider;
-      reader.readMessage(value,proto.pulumirpc.AnalyzerResourceProvider.deserializeBinaryFromReader);
+      var value = new proto.pulumirpc.AnalyzerProviderResource;
+      reader.readMessage(value,proto.pulumirpc.AnalyzerProviderResource.deserializeBinaryFromReader);
       msg.setProvider(value);
       break;
     default:
@@ -212,7 +213,7 @@ proto.pulumirpc.AnalyzeRequest.serializeBinaryToWriter = function(message, write
     writer.writeMessage(
       6,
       f,
-      proto.pulumirpc.AnalyzerResourceProvider.serializeBinaryToWriter
+      proto.pulumirpc.AnalyzerProviderResource.serializeBinaryToWriter
     );
   }
 };
@@ -324,16 +325,16 @@ proto.pulumirpc.AnalyzeRequest.prototype.hasOptions = function() {
 
 
 /**
- * optional AnalyzerResourceProvider provider = 6;
- * @return {?proto.pulumirpc.AnalyzerResourceProvider}
+ * optional AnalyzerProviderResource provider = 6;
+ * @return {?proto.pulumirpc.AnalyzerProviderResource}
  */
 proto.pulumirpc.AnalyzeRequest.prototype.getProvider = function() {
-  return /** @type{?proto.pulumirpc.AnalyzerResourceProvider} */ (
-    jspb.Message.getWrapperField(this, proto.pulumirpc.AnalyzerResourceProvider, 6));
+  return /** @type{?proto.pulumirpc.AnalyzerProviderResource} */ (
+    jspb.Message.getWrapperField(this, proto.pulumirpc.AnalyzerProviderResource, 6));
 };
 
 
-/** @param {?proto.pulumirpc.AnalyzerResourceProvider|undefined} value */
+/** @param {?proto.pulumirpc.AnalyzerProviderResource|undefined} value */
 proto.pulumirpc.AnalyzeRequest.prototype.setProvider = function(value) {
   jspb.Message.setWrapperField(this, 6, value);
 };
@@ -365,12 +366,19 @@ proto.pulumirpc.AnalyzeRequest.prototype.hasProvider = function() {
  * @constructor
  */
 proto.pulumirpc.AnalyzerResource = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.pulumirpc.AnalyzerResource.repeatedFields_, null);
 };
 goog.inherits(proto.pulumirpc.AnalyzerResource, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   proto.pulumirpc.AnalyzerResource.displayName = 'proto.pulumirpc.AnalyzerResource';
 }
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.pulumirpc.AnalyzerResource.repeatedFields_ = [8];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -405,7 +413,10 @@ proto.pulumirpc.AnalyzerResource.toObject = function(includeInstance, msg) {
     urn: jspb.Message.getFieldWithDefault(msg, 3, ""),
     name: jspb.Message.getFieldWithDefault(msg, 4, ""),
     options: (f = msg.getOptions()) && proto.pulumirpc.AnalyzerResourceOptions.toObject(includeInstance, f),
-    provider: (f = msg.getProvider()) && proto.pulumirpc.AnalyzerResourceProvider.toObject(includeInstance, f)
+    provider: (f = msg.getProvider()) && proto.pulumirpc.AnalyzerProviderResource.toObject(includeInstance, f),
+    parent: jspb.Message.getFieldWithDefault(msg, 7, ""),
+    dependenciesList: jspb.Message.getRepeatedField(msg, 8),
+    propertydependenciesMap: (f = msg.getPropertydependenciesMap()) ? f.toObject(includeInstance, proto.pulumirpc.AnalyzerPropertyDependencies.toObject) : []
   };
 
   if (includeInstance) {
@@ -465,9 +476,23 @@ proto.pulumirpc.AnalyzerResource.deserializeBinaryFromReader = function(msg, rea
       msg.setOptions(value);
       break;
     case 6:
-      var value = new proto.pulumirpc.AnalyzerResourceProvider;
-      reader.readMessage(value,proto.pulumirpc.AnalyzerResourceProvider.deserializeBinaryFromReader);
+      var value = new proto.pulumirpc.AnalyzerProviderResource;
+      reader.readMessage(value,proto.pulumirpc.AnalyzerProviderResource.deserializeBinaryFromReader);
       msg.setProvider(value);
+      break;
+    case 7:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setParent(value);
+      break;
+    case 8:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addDependencies(value);
+      break;
+    case 9:
+      var value = msg.getPropertydependenciesMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readMessage, proto.pulumirpc.AnalyzerPropertyDependencies.deserializeBinaryFromReader);
+         });
       break;
     default:
       reader.skipField();
@@ -540,8 +565,26 @@ proto.pulumirpc.AnalyzerResource.serializeBinaryToWriter = function(message, wri
     writer.writeMessage(
       6,
       f,
-      proto.pulumirpc.AnalyzerResourceProvider.serializeBinaryToWriter
+      proto.pulumirpc.AnalyzerProviderResource.serializeBinaryToWriter
     );
+  }
+  f = message.getParent();
+  if (f.length > 0) {
+    writer.writeString(
+      7,
+      f
+    );
+  }
+  f = message.getDependenciesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      8,
+      f
+    );
+  }
+  f = message.getPropertydependenciesMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(9, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeMessage, proto.pulumirpc.AnalyzerPropertyDependencies.serializeBinaryToWriter);
   }
 };
 
@@ -652,16 +695,16 @@ proto.pulumirpc.AnalyzerResource.prototype.hasOptions = function() {
 
 
 /**
- * optional AnalyzerResourceProvider provider = 6;
- * @return {?proto.pulumirpc.AnalyzerResourceProvider}
+ * optional AnalyzerProviderResource provider = 6;
+ * @return {?proto.pulumirpc.AnalyzerProviderResource}
  */
 proto.pulumirpc.AnalyzerResource.prototype.getProvider = function() {
-  return /** @type{?proto.pulumirpc.AnalyzerResourceProvider} */ (
-    jspb.Message.getWrapperField(this, proto.pulumirpc.AnalyzerResourceProvider, 6));
+  return /** @type{?proto.pulumirpc.AnalyzerProviderResource} */ (
+    jspb.Message.getWrapperField(this, proto.pulumirpc.AnalyzerProviderResource, 6));
 };
 
 
-/** @param {?proto.pulumirpc.AnalyzerResourceProvider|undefined} value */
+/** @param {?proto.pulumirpc.AnalyzerProviderResource|undefined} value */
 proto.pulumirpc.AnalyzerResource.prototype.setProvider = function(value) {
   jspb.Message.setWrapperField(this, 6, value);
 };
@@ -678,6 +721,68 @@ proto.pulumirpc.AnalyzerResource.prototype.clearProvider = function() {
  */
 proto.pulumirpc.AnalyzerResource.prototype.hasProvider = function() {
   return jspb.Message.getField(this, 6) != null;
+};
+
+
+/**
+ * optional string parent = 7;
+ * @return {string}
+ */
+proto.pulumirpc.AnalyzerResource.prototype.getParent = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+};
+
+
+/** @param {string} value */
+proto.pulumirpc.AnalyzerResource.prototype.setParent = function(value) {
+  jspb.Message.setProto3StringField(this, 7, value);
+};
+
+
+/**
+ * repeated string dependencies = 8;
+ * @return {!Array.<string>}
+ */
+proto.pulumirpc.AnalyzerResource.prototype.getDependenciesList = function() {
+  return /** @type {!Array.<string>} */ (jspb.Message.getRepeatedField(this, 8));
+};
+
+
+/** @param {!Array.<string>} value */
+proto.pulumirpc.AnalyzerResource.prototype.setDependenciesList = function(value) {
+  jspb.Message.setField(this, 8, value || []);
+};
+
+
+/**
+ * @param {!string} value
+ * @param {number=} opt_index
+ */
+proto.pulumirpc.AnalyzerResource.prototype.addDependencies = function(value, opt_index) {
+  jspb.Message.addToRepeatedField(this, 8, value, opt_index);
+};
+
+
+proto.pulumirpc.AnalyzerResource.prototype.clearDependenciesList = function() {
+  this.setDependenciesList([]);
+};
+
+
+/**
+ * map<string, AnalyzerPropertyDependencies> propertyDependencies = 9;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,!proto.pulumirpc.AnalyzerPropertyDependencies>}
+ */
+proto.pulumirpc.AnalyzerResource.prototype.getPropertydependenciesMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,!proto.pulumirpc.AnalyzerPropertyDependencies>} */ (
+      jspb.Message.getMapField(this, 9, opt_noLazyCreate,
+      proto.pulumirpc.AnalyzerPropertyDependencies));
+};
+
+
+proto.pulumirpc.AnalyzerResource.prototype.clearPropertydependenciesMap = function() {
+  this.getPropertydependenciesMap().clear();
 };
 
 
@@ -704,7 +809,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.pulumirpc.AnalyzerResourceOptions.repeatedFields_ = [3,6,8,9];
+proto.pulumirpc.AnalyzerResourceOptions.repeatedFields_ = [2,5,6];
 
 
 
@@ -735,15 +840,12 @@ proto.pulumirpc.AnalyzerResourceOptions.prototype.toObject = function(opt_includ
  */
 proto.pulumirpc.AnalyzerResourceOptions.toObject = function(includeInstance, msg) {
   var f, obj = {
-    parent: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    protect: jspb.Message.getFieldWithDefault(msg, 2, false),
-    ignorechangesList: jspb.Message.getRepeatedField(msg, 3),
-    deletebeforereplace: jspb.Message.getFieldWithDefault(msg, 4, false),
-    deletebeforereplacedefined: jspb.Message.getFieldWithDefault(msg, 5, false),
-    dependenciesList: jspb.Message.getRepeatedField(msg, 6),
-    provider: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    additionalsecretoutputsList: jspb.Message.getRepeatedField(msg, 8),
-    aliasesList: jspb.Message.getRepeatedField(msg, 9),
+    protect: jspb.Message.getFieldWithDefault(msg, 1, false),
+    ignorechangesList: jspb.Message.getRepeatedField(msg, 2),
+    deletebeforereplace: jspb.Message.getFieldWithDefault(msg, 3, false),
+    deletebeforereplacedefined: jspb.Message.getFieldWithDefault(msg, 4, false),
+    additionalsecretoutputsList: jspb.Message.getRepeatedField(msg, 5),
+    aliasesList: jspb.Message.getRepeatedField(msg, 6),
     customtimeouts: (f = msg.getCustomtimeouts()) && proto.pulumirpc.AnalyzerResourceOptions.CustomTimeouts.toObject(includeInstance, f)
   };
 
@@ -782,42 +884,30 @@ proto.pulumirpc.AnalyzerResourceOptions.deserializeBinaryFromReader = function(m
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setParent(value);
-      break;
-    case 2:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setProtect(value);
       break;
-    case 3:
+    case 2:
       var value = /** @type {string} */ (reader.readString());
       msg.addIgnorechanges(value);
       break;
-    case 4:
+    case 3:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setDeletebeforereplace(value);
       break;
-    case 5:
+    case 4:
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setDeletebeforereplacedefined(value);
       break;
-    case 6:
-      var value = /** @type {string} */ (reader.readString());
-      msg.addDependencies(value);
-      break;
-    case 7:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setProvider(value);
-      break;
-    case 8:
+    case 5:
       var value = /** @type {string} */ (reader.readString());
       msg.addAdditionalsecretoutputs(value);
       break;
-    case 9:
+    case 6:
       var value = /** @type {string} */ (reader.readString());
       msg.addAliases(value);
       break;
-    case 10:
+    case 7:
       var value = new proto.pulumirpc.AnalyzerResourceOptions.CustomTimeouts;
       reader.readMessage(value,proto.pulumirpc.AnalyzerResourceOptions.CustomTimeouts.deserializeBinaryFromReader);
       msg.setCustomtimeouts(value);
@@ -851,73 +941,52 @@ proto.pulumirpc.AnalyzerResourceOptions.prototype.serializeBinary = function() {
  */
 proto.pulumirpc.AnalyzerResourceOptions.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getParent();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
   f = message.getProtect();
   if (f) {
     writer.writeBool(
-      2,
+      1,
       f
     );
   }
   f = message.getIgnorechangesList();
   if (f.length > 0) {
     writer.writeRepeatedString(
-      3,
+      2,
       f
     );
   }
   f = message.getDeletebeforereplace();
   if (f) {
     writer.writeBool(
-      4,
+      3,
       f
     );
   }
   f = message.getDeletebeforereplacedefined();
   if (f) {
     writer.writeBool(
-      5,
-      f
-    );
-  }
-  f = message.getDependenciesList();
-  if (f.length > 0) {
-    writer.writeRepeatedString(
-      6,
-      f
-    );
-  }
-  f = message.getProvider();
-  if (f.length > 0) {
-    writer.writeString(
-      7,
+      4,
       f
     );
   }
   f = message.getAdditionalsecretoutputsList();
   if (f.length > 0) {
     writer.writeRepeatedString(
-      8,
+      5,
       f
     );
   }
   f = message.getAliasesList();
   if (f.length > 0) {
     writer.writeRepeatedString(
-      9,
+      6,
       f
     );
   }
   f = message.getCustomtimeouts();
   if (f != null) {
     writer.writeMessage(
-      10,
+      7,
       f,
       proto.pulumirpc.AnalyzerResourceOptions.CustomTimeouts.serializeBinaryToWriter
     );
@@ -1122,49 +1191,34 @@ proto.pulumirpc.AnalyzerResourceOptions.CustomTimeouts.prototype.setDelete = fun
 
 
 /**
- * optional string parent = 1;
- * @return {string}
- */
-proto.pulumirpc.AnalyzerResourceOptions.prototype.getParent = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/** @param {string} value */
-proto.pulumirpc.AnalyzerResourceOptions.prototype.setParent = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional bool protect = 2;
+ * optional bool protect = 1;
  * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
  * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.getProtect = function() {
-  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(this, 2, false));
+  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(this, 1, false));
 };
 
 
 /** @param {boolean} value */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.setProtect = function(value) {
-  jspb.Message.setProto3BooleanField(this, 2, value);
+  jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
 
 /**
- * repeated string ignoreChanges = 3;
+ * repeated string ignoreChanges = 2;
  * @return {!Array.<string>}
  */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.getIgnorechangesList = function() {
-  return /** @type {!Array.<string>} */ (jspb.Message.getRepeatedField(this, 3));
+  return /** @type {!Array.<string>} */ (jspb.Message.getRepeatedField(this, 2));
 };
 
 
 /** @param {!Array.<string>} value */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.setIgnorechangesList = function(value) {
-  jspb.Message.setField(this, 3, value || []);
+  jspb.Message.setField(this, 2, value || []);
 };
 
 
@@ -1173,7 +1227,7 @@ proto.pulumirpc.AnalyzerResourceOptions.prototype.setIgnorechangesList = functio
  * @param {number=} opt_index
  */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.addIgnorechanges = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 3, value, opt_index);
+  jspb.Message.addToRepeatedField(this, 2, value, opt_index);
 };
 
 
@@ -1183,95 +1237,51 @@ proto.pulumirpc.AnalyzerResourceOptions.prototype.clearIgnorechangesList = funct
 
 
 /**
- * optional bool deleteBeforeReplace = 4;
+ * optional bool deleteBeforeReplace = 3;
  * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
  * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.getDeletebeforereplace = function() {
-  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(this, 4, false));
+  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(this, 3, false));
 };
 
 
 /** @param {boolean} value */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.setDeletebeforereplace = function(value) {
-  jspb.Message.setProto3BooleanField(this, 4, value);
+  jspb.Message.setProto3BooleanField(this, 3, value);
 };
 
 
 /**
- * optional bool deleteBeforeReplaceDefined = 5;
+ * optional bool deleteBeforeReplaceDefined = 4;
  * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
  * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.getDeletebeforereplacedefined = function() {
-  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(this, 5, false));
+  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(this, 4, false));
 };
 
 
 /** @param {boolean} value */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.setDeletebeforereplacedefined = function(value) {
-  jspb.Message.setProto3BooleanField(this, 5, value);
+  jspb.Message.setProto3BooleanField(this, 4, value);
 };
 
 
 /**
- * repeated string dependencies = 6;
- * @return {!Array.<string>}
- */
-proto.pulumirpc.AnalyzerResourceOptions.prototype.getDependenciesList = function() {
-  return /** @type {!Array.<string>} */ (jspb.Message.getRepeatedField(this, 6));
-};
-
-
-/** @param {!Array.<string>} value */
-proto.pulumirpc.AnalyzerResourceOptions.prototype.setDependenciesList = function(value) {
-  jspb.Message.setField(this, 6, value || []);
-};
-
-
-/**
- * @param {!string} value
- * @param {number=} opt_index
- */
-proto.pulumirpc.AnalyzerResourceOptions.prototype.addDependencies = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 6, value, opt_index);
-};
-
-
-proto.pulumirpc.AnalyzerResourceOptions.prototype.clearDependenciesList = function() {
-  this.setDependenciesList([]);
-};
-
-
-/**
- * optional string provider = 7;
- * @return {string}
- */
-proto.pulumirpc.AnalyzerResourceOptions.prototype.getProvider = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
-};
-
-
-/** @param {string} value */
-proto.pulumirpc.AnalyzerResourceOptions.prototype.setProvider = function(value) {
-  jspb.Message.setProto3StringField(this, 7, value);
-};
-
-
-/**
- * repeated string additionalSecretOutputs = 8;
+ * repeated string additionalSecretOutputs = 5;
  * @return {!Array.<string>}
  */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.getAdditionalsecretoutputsList = function() {
-  return /** @type {!Array.<string>} */ (jspb.Message.getRepeatedField(this, 8));
+  return /** @type {!Array.<string>} */ (jspb.Message.getRepeatedField(this, 5));
 };
 
 
 /** @param {!Array.<string>} value */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.setAdditionalsecretoutputsList = function(value) {
-  jspb.Message.setField(this, 8, value || []);
+  jspb.Message.setField(this, 5, value || []);
 };
 
 
@@ -1280,7 +1290,7 @@ proto.pulumirpc.AnalyzerResourceOptions.prototype.setAdditionalsecretoutputsList
  * @param {number=} opt_index
  */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.addAdditionalsecretoutputs = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 8, value, opt_index);
+  jspb.Message.addToRepeatedField(this, 5, value, opt_index);
 };
 
 
@@ -1290,17 +1300,17 @@ proto.pulumirpc.AnalyzerResourceOptions.prototype.clearAdditionalsecretoutputsLi
 
 
 /**
- * repeated string aliases = 9;
+ * repeated string aliases = 6;
  * @return {!Array.<string>}
  */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.getAliasesList = function() {
-  return /** @type {!Array.<string>} */ (jspb.Message.getRepeatedField(this, 9));
+  return /** @type {!Array.<string>} */ (jspb.Message.getRepeatedField(this, 6));
 };
 
 
 /** @param {!Array.<string>} value */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.setAliasesList = function(value) {
-  jspb.Message.setField(this, 9, value || []);
+  jspb.Message.setField(this, 6, value || []);
 };
 
 
@@ -1309,7 +1319,7 @@ proto.pulumirpc.AnalyzerResourceOptions.prototype.setAliasesList = function(valu
  * @param {number=} opt_index
  */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.addAliases = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 9, value, opt_index);
+  jspb.Message.addToRepeatedField(this, 6, value, opt_index);
 };
 
 
@@ -1319,18 +1329,18 @@ proto.pulumirpc.AnalyzerResourceOptions.prototype.clearAliasesList = function() 
 
 
 /**
- * optional CustomTimeouts customTimeouts = 10;
+ * optional CustomTimeouts customTimeouts = 7;
  * @return {?proto.pulumirpc.AnalyzerResourceOptions.CustomTimeouts}
  */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.getCustomtimeouts = function() {
   return /** @type{?proto.pulumirpc.AnalyzerResourceOptions.CustomTimeouts} */ (
-    jspb.Message.getWrapperField(this, proto.pulumirpc.AnalyzerResourceOptions.CustomTimeouts, 10));
+    jspb.Message.getWrapperField(this, proto.pulumirpc.AnalyzerResourceOptions.CustomTimeouts, 7));
 };
 
 
 /** @param {?proto.pulumirpc.AnalyzerResourceOptions.CustomTimeouts|undefined} value */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.setCustomtimeouts = function(value) {
-  jspb.Message.setWrapperField(this, 10, value);
+  jspb.Message.setWrapperField(this, 7, value);
 };
 
 
@@ -1344,7 +1354,7 @@ proto.pulumirpc.AnalyzerResourceOptions.prototype.clearCustomtimeouts = function
  * @return {!boolean}
  */
 proto.pulumirpc.AnalyzerResourceOptions.prototype.hasCustomtimeouts = function() {
-  return jspb.Message.getField(this, 10) != null;
+  return jspb.Message.getField(this, 7) != null;
 };
 
 
@@ -1359,12 +1369,12 @@ proto.pulumirpc.AnalyzerResourceOptions.prototype.hasCustomtimeouts = function()
  * @extends {jspb.Message}
  * @constructor
  */
-proto.pulumirpc.AnalyzerResourceProvider = function(opt_data) {
+proto.pulumirpc.AnalyzerProviderResource = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.pulumirpc.AnalyzerResourceProvider, jspb.Message);
+goog.inherits(proto.pulumirpc.AnalyzerProviderResource, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.pulumirpc.AnalyzerResourceProvider.displayName = 'proto.pulumirpc.AnalyzerResourceProvider';
+  proto.pulumirpc.AnalyzerProviderResource.displayName = 'proto.pulumirpc.AnalyzerProviderResource';
 }
 
 
@@ -1379,8 +1389,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.pulumirpc.AnalyzerResourceProvider.prototype.toObject = function(opt_includeInstance) {
-  return proto.pulumirpc.AnalyzerResourceProvider.toObject(opt_includeInstance, this);
+proto.pulumirpc.AnalyzerProviderResource.prototype.toObject = function(opt_includeInstance) {
+  return proto.pulumirpc.AnalyzerProviderResource.toObject(opt_includeInstance, this);
 };
 
 
@@ -1389,11 +1399,11 @@ proto.pulumirpc.AnalyzerResourceProvider.prototype.toObject = function(opt_inclu
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.pulumirpc.AnalyzerResourceProvider} msg The msg instance to transform.
+ * @param {!proto.pulumirpc.AnalyzerProviderResource} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pulumirpc.AnalyzerResourceProvider.toObject = function(includeInstance, msg) {
+proto.pulumirpc.AnalyzerProviderResource.toObject = function(includeInstance, msg) {
   var f, obj = {
     type: jspb.Message.getFieldWithDefault(msg, 1, ""),
     properties: (f = msg.getProperties()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f),
@@ -1412,23 +1422,23 @@ proto.pulumirpc.AnalyzerResourceProvider.toObject = function(includeInstance, ms
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.pulumirpc.AnalyzerResourceProvider}
+ * @return {!proto.pulumirpc.AnalyzerProviderResource}
  */
-proto.pulumirpc.AnalyzerResourceProvider.deserializeBinary = function(bytes) {
+proto.pulumirpc.AnalyzerProviderResource.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.pulumirpc.AnalyzerResourceProvider;
-  return proto.pulumirpc.AnalyzerResourceProvider.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.pulumirpc.AnalyzerProviderResource;
+  return proto.pulumirpc.AnalyzerProviderResource.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.pulumirpc.AnalyzerResourceProvider} msg The message object to deserialize into.
+ * @param {!proto.pulumirpc.AnalyzerProviderResource} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.pulumirpc.AnalyzerResourceProvider}
+ * @return {!proto.pulumirpc.AnalyzerProviderResource}
  */
-proto.pulumirpc.AnalyzerResourceProvider.deserializeBinaryFromReader = function(msg, reader) {
+proto.pulumirpc.AnalyzerProviderResource.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -1465,9 +1475,9 @@ proto.pulumirpc.AnalyzerResourceProvider.deserializeBinaryFromReader = function(
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.pulumirpc.AnalyzerResourceProvider.prototype.serializeBinary = function() {
+proto.pulumirpc.AnalyzerProviderResource.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.pulumirpc.AnalyzerResourceProvider.serializeBinaryToWriter(this, writer);
+  proto.pulumirpc.AnalyzerProviderResource.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -1475,11 +1485,11 @@ proto.pulumirpc.AnalyzerResourceProvider.prototype.serializeBinary = function() 
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.pulumirpc.AnalyzerResourceProvider} message
+ * @param {!proto.pulumirpc.AnalyzerProviderResource} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.pulumirpc.AnalyzerResourceProvider.serializeBinaryToWriter = function(message, writer) {
+proto.pulumirpc.AnalyzerProviderResource.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getType();
   if (f.length > 0) {
@@ -1517,13 +1527,13 @@ proto.pulumirpc.AnalyzerResourceProvider.serializeBinaryToWriter = function(mess
  * optional string type = 1;
  * @return {string}
  */
-proto.pulumirpc.AnalyzerResourceProvider.prototype.getType = function() {
+proto.pulumirpc.AnalyzerProviderResource.prototype.getType = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /** @param {string} value */
-proto.pulumirpc.AnalyzerResourceProvider.prototype.setType = function(value) {
+proto.pulumirpc.AnalyzerProviderResource.prototype.setType = function(value) {
   jspb.Message.setProto3StringField(this, 1, value);
 };
 
@@ -1532,19 +1542,19 @@ proto.pulumirpc.AnalyzerResourceProvider.prototype.setType = function(value) {
  * optional google.protobuf.Struct properties = 2;
  * @return {?proto.google.protobuf.Struct}
  */
-proto.pulumirpc.AnalyzerResourceProvider.prototype.getProperties = function() {
+proto.pulumirpc.AnalyzerProviderResource.prototype.getProperties = function() {
   return /** @type{?proto.google.protobuf.Struct} */ (
     jspb.Message.getWrapperField(this, google_protobuf_struct_pb.Struct, 2));
 };
 
 
 /** @param {?proto.google.protobuf.Struct|undefined} value */
-proto.pulumirpc.AnalyzerResourceProvider.prototype.setProperties = function(value) {
+proto.pulumirpc.AnalyzerProviderResource.prototype.setProperties = function(value) {
   jspb.Message.setWrapperField(this, 2, value);
 };
 
 
-proto.pulumirpc.AnalyzerResourceProvider.prototype.clearProperties = function() {
+proto.pulumirpc.AnalyzerProviderResource.prototype.clearProperties = function() {
   this.setProperties(undefined);
 };
 
@@ -1553,7 +1563,7 @@ proto.pulumirpc.AnalyzerResourceProvider.prototype.clearProperties = function() 
  * Returns whether this field is set.
  * @return {!boolean}
  */
-proto.pulumirpc.AnalyzerResourceProvider.prototype.hasProperties = function() {
+proto.pulumirpc.AnalyzerProviderResource.prototype.hasProperties = function() {
   return jspb.Message.getField(this, 2) != null;
 };
 
@@ -1562,13 +1572,13 @@ proto.pulumirpc.AnalyzerResourceProvider.prototype.hasProperties = function() {
  * optional string urn = 3;
  * @return {string}
  */
-proto.pulumirpc.AnalyzerResourceProvider.prototype.getUrn = function() {
+proto.pulumirpc.AnalyzerProviderResource.prototype.getUrn = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /** @param {string} value */
-proto.pulumirpc.AnalyzerResourceProvider.prototype.setUrn = function(value) {
+proto.pulumirpc.AnalyzerProviderResource.prototype.setUrn = function(value) {
   jspb.Message.setProto3StringField(this, 3, value);
 };
 
@@ -1577,14 +1587,177 @@ proto.pulumirpc.AnalyzerResourceProvider.prototype.setUrn = function(value) {
  * optional string name = 4;
  * @return {string}
  */
-proto.pulumirpc.AnalyzerResourceProvider.prototype.getName = function() {
+proto.pulumirpc.AnalyzerProviderResource.prototype.getName = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
 
 /** @param {string} value */
-proto.pulumirpc.AnalyzerResourceProvider.prototype.setName = function(value) {
+proto.pulumirpc.AnalyzerProviderResource.prototype.setName = function(value) {
   jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+
+/**
+ * Generated by JsPbCodeGenerator.
+ * @param {Array=} opt_data Optional initial data array, typically from a
+ * server response, or constructed directly in Javascript. The array is used
+ * in place and becomes part of the constructed object. It is not cloned.
+ * If no data is provided, the constructed object will be empty, but still
+ * valid.
+ * @extends {jspb.Message}
+ * @constructor
+ */
+proto.pulumirpc.AnalyzerPropertyDependencies = function(opt_data) {
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.pulumirpc.AnalyzerPropertyDependencies.repeatedFields_, null);
+};
+goog.inherits(proto.pulumirpc.AnalyzerPropertyDependencies, jspb.Message);
+if (goog.DEBUG && !COMPILED) {
+  proto.pulumirpc.AnalyzerPropertyDependencies.displayName = 'proto.pulumirpc.AnalyzerPropertyDependencies';
+}
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.pulumirpc.AnalyzerPropertyDependencies.repeatedFields_ = [1];
+
+
+
+if (jspb.Message.GENERATE_TO_OBJECT) {
+/**
+ * Creates an object representation of this proto suitable for use in Soy templates.
+ * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
+ * For the list of reserved names please see:
+ *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
+ * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
+ *     for transitional soy proto support: http://goto/soy-param-migration
+ * @return {!Object}
+ */
+proto.pulumirpc.AnalyzerPropertyDependencies.prototype.toObject = function(opt_includeInstance) {
+  return proto.pulumirpc.AnalyzerPropertyDependencies.toObject(opt_includeInstance, this);
+};
+
+
+/**
+ * Static version of the {@see toObject} method.
+ * @param {boolean|undefined} includeInstance Whether to include the JSPB
+ *     instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
+ * @param {!proto.pulumirpc.AnalyzerPropertyDependencies} msg The msg instance to transform.
+ * @return {!Object}
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.pulumirpc.AnalyzerPropertyDependencies.toObject = function(includeInstance, msg) {
+  var f, obj = {
+    urnsList: jspb.Message.getRepeatedField(msg, 1)
+  };
+
+  if (includeInstance) {
+    obj.$jspbMessageInstance = msg;
+  }
+  return obj;
+};
+}
+
+
+/**
+ * Deserializes binary data (in protobuf wire format).
+ * @param {jspb.ByteSource} bytes The bytes to deserialize.
+ * @return {!proto.pulumirpc.AnalyzerPropertyDependencies}
+ */
+proto.pulumirpc.AnalyzerPropertyDependencies.deserializeBinary = function(bytes) {
+  var reader = new jspb.BinaryReader(bytes);
+  var msg = new proto.pulumirpc.AnalyzerPropertyDependencies;
+  return proto.pulumirpc.AnalyzerPropertyDependencies.deserializeBinaryFromReader(msg, reader);
+};
+
+
+/**
+ * Deserializes binary data (in protobuf wire format) from the
+ * given reader into the given message object.
+ * @param {!proto.pulumirpc.AnalyzerPropertyDependencies} msg The message object to deserialize into.
+ * @param {!jspb.BinaryReader} reader The BinaryReader to use.
+ * @return {!proto.pulumirpc.AnalyzerPropertyDependencies}
+ */
+proto.pulumirpc.AnalyzerPropertyDependencies.deserializeBinaryFromReader = function(msg, reader) {
+  while (reader.nextField()) {
+    if (reader.isEndGroup()) {
+      break;
+    }
+    var field = reader.getFieldNumber();
+    switch (field) {
+    case 1:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addUrns(value);
+      break;
+    default:
+      reader.skipField();
+      break;
+    }
+  }
+  return msg;
+};
+
+
+/**
+ * Serializes the message to binary data (in protobuf wire format).
+ * @return {!Uint8Array}
+ */
+proto.pulumirpc.AnalyzerPropertyDependencies.prototype.serializeBinary = function() {
+  var writer = new jspb.BinaryWriter();
+  proto.pulumirpc.AnalyzerPropertyDependencies.serializeBinaryToWriter(this, writer);
+  return writer.getResultBuffer();
+};
+
+
+/**
+ * Serializes the given message to binary data (in protobuf wire
+ * format), writing to the given BinaryWriter.
+ * @param {!proto.pulumirpc.AnalyzerPropertyDependencies} message
+ * @param {!jspb.BinaryWriter} writer
+ * @suppress {unusedLocalVariables} f is only used for nested messages
+ */
+proto.pulumirpc.AnalyzerPropertyDependencies.serializeBinaryToWriter = function(message, writer) {
+  var f = undefined;
+  f = message.getUrnsList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      1,
+      f
+    );
+  }
+};
+
+
+/**
+ * repeated string urns = 1;
+ * @return {!Array.<string>}
+ */
+proto.pulumirpc.AnalyzerPropertyDependencies.prototype.getUrnsList = function() {
+  return /** @type {!Array.<string>} */ (jspb.Message.getRepeatedField(this, 1));
+};
+
+
+/** @param {!Array.<string>} value */
+proto.pulumirpc.AnalyzerPropertyDependencies.prototype.setUrnsList = function(value) {
+  jspb.Message.setField(this, 1, value || []);
+};
+
+
+/**
+ * @param {!string} value
+ * @param {number=} opt_index
+ */
+proto.pulumirpc.AnalyzerPropertyDependencies.prototype.addUrns = function(value, opt_index) {
+  jspb.Message.addToRepeatedField(this, 1, value, opt_index);
+};
+
+
+proto.pulumirpc.AnalyzerPropertyDependencies.prototype.clearUrnsList = function() {
+  this.setUrnsList([]);
 };
 
 

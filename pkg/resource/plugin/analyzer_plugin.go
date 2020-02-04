@@ -142,7 +142,7 @@ func (a *analyzer) Analyze(r AnalyzerResource) ([]AnalyzeDiagnostic, error) {
 		return nil, err
 	}
 
-	provider, err := convertResourceProvider(r.Provider)
+	provider, err := convertProvider(r.Provider)
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +172,7 @@ func (a *analyzer) Analyze(r AnalyzerResource) ([]AnalyzeDiagnostic, error) {
 }
 
 // AnalyzeStack analyzes all resources in a stack at the end of the update operation.
-func (a *analyzer) AnalyzeStack(resources []AnalyzerResource) ([]AnalyzeDiagnostic, error) {
+func (a *analyzer) AnalyzeStack(resources []AnalyzerStackResource) ([]AnalyzeDiagnostic, error) {
 	logging.V(7).Infof("%s.AnalyzeStack(#resources=%d) executing", a.label(), len(resources))
 
 	protoResources := make([]*pulumirpc.AnalyzerResource, len(resources))
@@ -182,7 +182,7 @@ func (a *analyzer) AnalyzeStack(resources []AnalyzerResource) ([]AnalyzeDiagnost
 			return nil, errors.Wrap(err, "marshalling properties")
 		}
 
-		provider, err := convertResourceProvider(resource.Provider)
+		provider, err := convertProvider(resource.Provider)
 		if err != nil {
 			return nil, err
 		}
@@ -303,13 +303,10 @@ func convertResourceOptions(opts AnalyzerResourceOptions) *pulumirpc.AnalyzerRes
 	}
 
 	result := &pulumirpc.AnalyzerResourceOptions{
-		Parent:                     string(opts.Parent),
 		Protect:                    opts.Protect,
 		IgnoreChanges:              opts.IgnoreChanges,
 		DeleteBeforeReplace:        deleteBeforeReplace,
 		DeleteBeforeReplaceDefined: opts.DeleteBeforeReplace != nil,
-		Dependencies:               convertURNs(opts.Dependencies),
-		Provider:                   opts.Provider,
 		AdditionalSecretOutputs:    secs,
 		Aliases:                    convertURNs(opts.Aliases),
 		CustomTimeouts: &pulumirpc.AnalyzerResourceOptions_CustomTimeouts{
@@ -321,7 +318,7 @@ func convertResourceOptions(opts AnalyzerResourceOptions) *pulumirpc.AnalyzerRes
 	return result
 }
 
-func convertResourceProvider(provider *AnalyzerResourceProvider) (*pulumirpc.AnalyzerResourceProvider, error) {
+func convertProvider(provider *AnalyzerProviderResource) (*pulumirpc.AnalyzerProviderResource, error) {
 	if provider == nil {
 		return nil, nil
 	}
@@ -331,7 +328,7 @@ func convertResourceProvider(provider *AnalyzerResourceProvider) (*pulumirpc.Ana
 		return nil, errors.Wrap(err, "marshalling properties")
 	}
 
-	return &pulumirpc.AnalyzerResourceProvider{
+	return &pulumirpc.AnalyzerProviderResource{
 		Urn:        string(provider.URN),
 		Type:       string(provider.Type),
 		Name:       string(provider.Name),
